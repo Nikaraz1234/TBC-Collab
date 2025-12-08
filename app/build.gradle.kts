@@ -21,6 +21,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
     }
 
     buildTypes {
@@ -31,6 +33,14 @@ android {
                 "proguard-rules.pro"
             )
         }
+        getByName("debug") {
+            buildConfigField("String", "BASE_URL", "\"https://mocki.io/v1/\"")
+        }
+
+        getByName("release") {
+            buildConfigField("String", "BASE_URL", "\"https://mocki.io/v1/\"")
+        }
+
     }
 
     compileOptions {
@@ -41,6 +51,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

@@ -1,8 +1,5 @@
 package com.example.tbcworks.di
 
-import com.example.tbcworks.data.service.LoginService
-import com.example.tbcworks.data.service.RegisterService
-import com.example.tbcworks.data.service.UserService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -16,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import com.example.tbcworks.BuildConfig
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -71,26 +69,10 @@ object ApiModule {
     ): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
 
-
-    @Provides
-    @Singleton
-    fun provideLoginApi(retrofit: Retrofit): LoginService =
-        retrofit.create(LoginService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideRegisterApi(retrofit: Retrofit): RegisterService =
-        retrofit.create(RegisterService::class.java)
-
-
-    @Provides
-    @Singleton
-    fun provideUserApi(retrofit: Retrofit): UserService =
-        retrofit.create(UserService::class.java)
 }
