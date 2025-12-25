@@ -18,42 +18,40 @@ import com.example.tbcworks.presentation.model.LocationModel
 import com.example.tbcworks.presentation.model.OrganizerModel
 import com.example.tbcworks.presentation.model.SpeakerInfoModel
 import com.example.tbcworks.presentation.model.SpeakerModel
+import kotlin.math.min
 
-fun Event.toPresentation(): EventModel {
-    return EventModel(
-        id = this.id,
-        title = this.title,
-        organizer = this.organizer.toPresentation(),
-        category = this.category,
-        description = this.description,
-        agenda = this.agenda.map { it.toPresentation() },
-        imgUrl = this.imgUrl,
-        userStatus = this.userStatus,
-        registrationStatus = this.registrationStatus,
-        speakers = this.speakers.map { it.toPresentation() },
-        date = this.date.toPresentation(),
-        location = this.location.toPresentation(),
-        capacity = this.capacity.toPresentation()
-    )
-}
+fun Event.toPresentation(): EventModel = EventModel(
+    id = id,
+    title = title,
+    organizer = organizer?.toPresentation(),
+    category = category,
+    description = description,
+    agenda = agenda.map { it.toPresentation() },
+    imgUrl = imgUrl,
+    userStatus = userStatus,
+    registrationStatus = registrationStatus,
+    speakers = speakers.map { it.toPresentation() },
+    date = date?.toPresentation(),
+    location = location?.toPresentation(),
+    capacity = capacity?.toPresentation()
+)
 
-fun EventModel.toDomain(): Event {
-    return Event(
-        id = this.id,
-        title = this.title,
-        organizer = this.organizer.toDomain(),
-        category = this.category,
-        description = this.description,
-        agenda = this.agenda.map { it.toDomain() },
-        imgUrl = this.imgUrl,
-        userStatus = this.userStatus,
-        registrationStatus = this.registrationStatus,
-        speakers = this.speakers.map { it.toDomain() },
-        date = this.date.toDomain(),
-        location = this.location.toDomain(),
-        capacity = this.capacity.toDomain()
-    )
-}
+fun EventModel.toDomain(): Event = Event(
+    id = id,
+    title = title,
+    organizer = organizer?.toDomain(),
+    category = category,
+    description = description,
+    agenda = agenda.map { it.toDomain() },
+    imgUrl = imgUrl,
+    userStatus = userStatus,
+    registrationStatus = registrationStatus,
+    speakers = speakers.map { it.toDomain() },
+    date = date?.toDomain(),
+    location = location?.toDomain(),
+    capacity = capacity?.toDomain()
+)
+
 
 // Address
 fun Address.toPresentation(): AddressModel = AddressModel(
@@ -74,7 +72,7 @@ fun AgendaItem.toPresentation(): AgendaModel = AgendaModel(
 // Capacity
 fun Capacity.toPresentation(): CapacityModel = CapacityModel(
     maxCapacity = maxCapacity,
-    currentlyRegistered = currentlyRegistered,
+    minParticipants = minParticipants,
     enableWaitlist = enableWaitlist,
     waitlistCapacity = waitlistCapacity,
     autoApprove = autoApprove
@@ -90,7 +88,7 @@ fun EventDate.toPresentation(): EventDateModel = EventDateModel(
 
 // Location
 fun Location.toPresentation(): LocationModel = LocationModel(
-    type = type,
+    locationType = locationType,
     venueName = venueName,
     address = address.toPresentation(),
     roomNumber = roomNumber,
@@ -111,10 +109,7 @@ fun Organizer.toPresentation(): OrganizerModel = OrganizerModel(
 fun Speaker.toPresentation(): SpeakerModel = SpeakerModel(
     fullName = fullName,
     role = role,
-    linkedinUrl = linkedinUrl,
-    websiteUrl = websiteUrl,
     description = description,
-    imgUrl = imgUrl
 )
 
 // SpeakerInfo
@@ -142,7 +137,7 @@ fun AgendaModel.toDomain(): AgendaItem = AgendaItem(
 // Capacity
 fun CapacityModel.toDomain(): Capacity = Capacity(
     maxCapacity = maxCapacity,
-    currentlyRegistered = currentlyRegistered,
+    minParticipants = minParticipants,
     enableWaitlist = enableWaitlist,
     waitlistCapacity = waitlistCapacity,
     autoApprove = autoApprove
@@ -158,7 +153,7 @@ fun EventDateModel.toDomain(): EventDate = EventDate(
 
 // Location
 fun LocationModel.toDomain(): Location = Location(
-    type = type,
+    locationType = locationType,
     venueName = venueName,
     address = address.toDomain(),
     roomNumber = roomNumber,
@@ -169,7 +164,7 @@ fun LocationModel.toDomain(): Location = Location(
 // Organizer
 fun OrganizerModel.toDomain(): Organizer = Organizer(
     fullName = fullName,
-    jobTitle = jobTitle,
+    jobTitle = jobTitle ?: "",
     department = department,
     profileImgUrl = profileImgUrl,
     email = email
@@ -179,10 +174,7 @@ fun OrganizerModel.toDomain(): Organizer = Organizer(
 fun SpeakerModel.toDomain(): Speaker = Speaker(
     fullName = fullName,
     role = role,
-    linkedinUrl = linkedinUrl,
-    websiteUrl = websiteUrl,
     description = description,
-    imgUrl = imgUrl
 )
 
 // SpeakerInfo

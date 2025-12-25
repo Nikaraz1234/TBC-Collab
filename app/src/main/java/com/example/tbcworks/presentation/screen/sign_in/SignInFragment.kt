@@ -1,5 +1,6 @@
 package com.example.tbcworks.presentation.screen.sign_in
 
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.example.tbcworks.databinding.FragmentSignInBinding
 import com.example.tbcworks.presentation.common.BaseFragment
@@ -20,6 +21,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(
     override fun bind() {
         setup()
     }
+
     private fun setup() {
         setupListeners()
         observeState()
@@ -40,13 +42,15 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(
             viewModel.onEvent(SignInContract.Event.SetPassword(password))
             viewModel.onEvent(SignInContract.Event.SignInClicked)
         }
+
         tvBtnSignUp.setOnClickListener {
             viewModel.onEvent(SignInContract.Event.SignUpClicked)
         }
     }
 
-    private fun observeState() = with(binding){
+    private fun observeState() = with(binding) {
         collectStateFlow(viewModel.uiState) { state ->
+            progressBar.isVisible = state.isLoading
             etEmail.error = state.emailError
             etPassword.error = state.passwordError
             cbRemember.isChecked = state.rememberMe
@@ -60,12 +64,13 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>(
                     findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToEventHubFragment())
                 }
                 SignInContract.SideEffect.NavigateToForgotPassword -> {
-                    // navigate to forgot password
+
                 }
                 SignInContract.SideEffect.NavigateToSignUp -> {
                     findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
                 }
                 is SignInContract.SideEffect.ShowError -> {
+                    binding.root.showSnackBar(effect.message)
                 }
             }
         }

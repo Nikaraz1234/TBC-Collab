@@ -4,10 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LocationDto(
-    val type: String,
+    val locationType: LocationTypeEnum,
     val venueName: String,
     val address: AddressDto,
     val roomNumber: String,
     val floor: String,
-    val additionalNotes: String
+    val additionalNotes: String?
 )

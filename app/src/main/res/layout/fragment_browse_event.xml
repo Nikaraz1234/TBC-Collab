@@ -80,6 +80,7 @@
         android:id="@+id/rvEvents"
         app:layout_constraintTop_toBottomOf="@id/rvCategories"
         app:layout_constraintStart_toStartOf="parent"
+        android:paddingBottom="100dp"
         android:layout_margin="16dp"/>
 
 

@@ -8,7 +8,7 @@ class ValidateNotEmptyUseCase @Inject constructor() : Validator<String> {
 
     override fun validate(value: String): ValidationResult {
         return if (value.isBlank()) {
-            ValidationResult.Error("EMPTY")
+            ValidationResult.Error("Fill all fields!")
         } else {
             ValidationResult.Success
         }

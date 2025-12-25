@@ -1,7 +1,9 @@
 package com.example.tbcworks.presentation.screen.register.mapper
 
 import com.example.tbcworks.domain.model.auth.SignUp
+import com.example.tbcworks.domain.model.auth.SignUpResponse
 import com.example.tbcworks.presentation.screen.register.model.SignUpModel
+import com.example.tbcworks.presentation.screen.register.model.UserModel
 
 fun SignUpModel.toDomain(): SignUp {
     return SignUp(
@@ -11,6 +13,12 @@ fun SignUpModel.toDomain(): SignUp {
         phoneNumber = this.phoneNumber,
         otpCode = this.otpCode,
         department = this.department,
-        password = this.password
+        password = this.password,
+        confirmPassword = confirmPassword
+    )
+}
+fun SignUpResponse.toPresentation(): UserModel {
+    return UserModel(
+        id = id
     )
 }

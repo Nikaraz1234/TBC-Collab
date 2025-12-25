@@ -1,9 +1,11 @@
 package com.example.tbcworks.di
 
 import com.example.tbcworks.data.repository.EventRepositoryImpl
+import com.example.tbcworks.data.repository.NotificationRepositoryImpl
 import com.example.tbcworks.data.repository.SignInRepositoryImpl
 import com.example.tbcworks.data.repository.SignUpRepositoryImpl
 import com.example.tbcworks.domain.repository.EventRepository
+import com.example.tbcworks.domain.repository.NotificationRepository
 import com.example.tbcworks.domain.repository.SignInRepository
 import com.example.tbcworks.domain.repository.SignUpRepository
 import dagger.Binds
@@ -28,4 +30,8 @@ abstract class RepositoryModule {
     abstract fun bindSignInRepository(
         impl: SignInRepositoryImpl
     ): SignInRepository
+    @Binds
+    abstract fun bindNotificationRepository(
+        impl: NotificationRepositoryImpl
+    ): NotificationRepository
 }

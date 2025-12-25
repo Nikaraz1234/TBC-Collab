@@ -6,6 +6,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface SignInService {
-    @POST("login")
+    @POST("auth/login")
     suspend fun signIn(@Body request: SignInRequestDto): SignInResponseDto
 }

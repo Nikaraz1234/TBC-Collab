@@ -10,6 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="All"
+        android:textColor="@color/gray_dark_text"
+        android:textFontWeight="400"
         android:background="@drawable/shape_btn_gray_rounded"
         android:paddingVertical="10dp"
         android:paddingHorizontal="20dp"

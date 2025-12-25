@@ -29,11 +29,22 @@
         app:layout_constraintStart_toEndOf="@id/ivTitle"
         app:layout_constraintTop_toTopOf="@id/ivTitle"
         app:layout_constraintBottom_toBottomOf="@id/ivTitle"/>
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+        android:indeterminate="true"/>
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_margin="16dp"
+        android:id="@+id/btnNotifications"
         android:background="@drawable/ic_notifications"
         android:backgroundTint="@color/gray_text"
         app:layout_constraintTop_toTopOf="@id/ivTitle"
@@ -45,6 +56,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="16dp"
+        android:src="@drawable/ic_profile_pic"
         android:background="@drawable/circle_bg"
         android:backgroundTint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
@@ -80,7 +92,9 @@
                 android:text="Welcome Back, Sarah"
                 android:layout_margin="16dp"
                 android:id="@+id/tvWelcome"
+                android:textColor="@color/black"
                 android:textSize="24sp"
+                android:textFontWeight="400"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
             <androidx.appcompat.widget.AppCompatTextView

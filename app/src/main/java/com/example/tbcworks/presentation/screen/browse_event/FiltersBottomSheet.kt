@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.tbcworks.databinding.FragmentFiltersBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FiltersBottomSheet(
-    private val onFilterSelected: (online: Boolean, offline: Boolean) -> Unit
+    private val onFilterSelected: (online: Boolean, offline: Boolean, available: Boolean, full: Boolean) -> Unit
 ) : BottomSheetDialogFragment() {
 
     private var _binding: FragmentFiltersBottomSheetBinding? = null
@@ -24,12 +26,12 @@ class FiltersBottomSheet(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.btnApplyFilters.setOnClickListener {
-            val onlineSelected = binding.cbOnline.isChecked
-            val offlineSelected = binding.cbOffline.isChecked
-
-            onFilterSelected(onlineSelected, offlineSelected)
+            val online = binding.cbOnline.isChecked
+            val offline = binding.cbOffline.isChecked
+            val available = binding.cbAvailable.isChecked
+            val full = binding.cbFull.isChecked
+            onFilterSelected(online, offline, available, full)
             dismiss()
         }
     }

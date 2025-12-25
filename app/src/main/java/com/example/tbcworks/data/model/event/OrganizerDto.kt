@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class OrganizerDto(
     val fullName: String,
-    val jobTitle: String,
+    val jobTitle: String?,
     val department: String,
-    val profileImgUrl: String,
+    val profileImgUrl: String?,
     val email: String
 )

@@ -1,6 +1,8 @@
 package com.example.tbcworks.presentation.screen.register
 
+import com.example.tbcworks.domain.usecase.auth.SendOtpUseCase
 import com.example.tbcworks.domain.usecase.auth.SignUpUseCase
+import com.example.tbcworks.domain.usecase.auth.VerifyOtpUseCase
 import com.example.tbcworks.domain.usecase.validation.ValidateDepartmentSelectedUseCase
 import com.example.tbcworks.domain.usecase.validation.ValidateEmailFormatUseCase
 import com.example.tbcworks.domain.usecase.validation.ValidateNotEmptyUseCase
@@ -17,6 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
+    private val sendOtpUseCase: SendOtpUseCase,
+    private val verifyOtpUseCase: VerifyOtpUseCase,
     private val validateNotEmpty: ValidateNotEmptyUseCase,
     private val validateEmailFormat: ValidateEmailFormatUseCase,
     private val validatePasswordLength: ValidatePasswordLengthUseCase,
@@ -30,92 +34,83 @@ class SignUpViewModel @Inject constructor(
     fun onEvent(event: SignUpContract.SignUpEvent) {
         when (event) {
             is SignUpContract.SignUpEvent.Submit -> validateAndSignUp(event.model)
+            is SignUpContract.SignUpEvent.SendOtpClicked -> sendOtp(event.phoneNumber)
             SignUpContract.SignUpEvent.SignInClicked -> sendSideEffect(SignUpContract.SignUpSideEffect.NavigateToSignIn)
         }
     }
 
-    private fun validateAndSignUp(model: SignUpModel) {
-        // validate first name
-        val firstNameResult = validateNotEmpty.validate(model.firstName)
-        if (firstNameResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(firstNameResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.FIRST_NAME to firstNameResult.message)) }
+    private fun sendOtp(phoneNumber: String) {
+        if (validateNotEmpty.validate(phoneNumber) is ValidationResult.Error) {
+            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage("Phone number cannot be empty"))
             return
         }
 
-        // validate last name
-        val lastNameResult = validateNotEmpty.validate(model.lastName)
-        if (lastNameResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(lastNameResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.LAST_NAME to lastNameResult.message)) }
-            return
-        }
-
-        // validate email
-        val emailResult = validateEmailFormat.validate(model.email)
-        if (emailResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(emailResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.EMAIL to emailResult.message)) }
-            return
-        }
-
-        // validate phone
-        val phoneResult = validateNotEmpty.validate(model.phoneNumber)
-        if (phoneResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(phoneResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.PHONE to phoneResult.message)) }
-            return
-        }
-
-        // validate OTP
-        val otpResult = validateNotEmpty.validate(model.otpCode)
-        if (otpResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(otpResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.OTP to otpResult.message)) }
-            return
-        }
-
-        // validate department
-        val deptResult = validateDepartmentSelected.validate(model.department)
-        if (deptResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(deptResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.DEPARTMENT to deptResult.message)) }
-            return
-        }
-
-        // validate password
-        val passwordResult = validatePasswordLength.validate(model.password)
-        if (passwordResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(passwordResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.PASSWORD to passwordResult.message)) }
-            return
-        }
-
-        // validate password match
-        val confirmResult = validatePasswordsMatch.validate(model.password, model.confirmPassword)
-        if (confirmResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(confirmResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.CONFIRM_PASSWORD to confirmResult.message)) }
-            return
-        }
-
-        // validate terms acceptance
-        val policyResult = validateTermsAccepted.validate(model.isPolicyAccepted)
-        if (policyResult is ValidationResult.Error) {
-            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(policyResult.message))
-            setState { copy(errors = mapOf(SignUpContract.SignUpState.Field.POLICY to policyResult.message)) }
-            return
-        }
-
-        // all validations passed → proceed with signup
-        setState { copy(isLoading = true) }
         handleResponse(
-            apiCall = { signUpUseCase.invoke(model.toDomain()) },
-            onSuccess = { sendSideEffect(SignUpContract.SignUpSideEffect.NavigateToHome) },
-            onError = { sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(it)) },
+            apiCall = { sendOtpUseCase.execute(phoneNumber) },
+            onSuccess = { sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage("OTP sent successfully"))
+                setState { copy(isLoading = false) }},
+            onError = { sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(it))
+                setState { copy(isLoading = false) }},
             onLoading = { setState { copy(isLoading = true) } }
         )
     }
 
+    private fun validateAndSignUp(model: SignUpModel) {
+        val errors = mutableMapOf<SignUpContract.SignUpState.Field, String>()
 
+        // Validate all fields
+        listOf(
+            SignUpContract.SignUpState.Field.FIRST_NAME to validateNotEmpty.validate(model.firstName),
+            SignUpContract.SignUpState.Field.LAST_NAME to validateNotEmpty.validate(model.lastName),
+            SignUpContract.SignUpState.Field.EMAIL to validateEmailFormat.validate(model.email),
+            SignUpContract.SignUpState.Field.PHONE to validateNotEmpty.validate(model.phoneNumber),
+            SignUpContract.SignUpState.Field.OTP to validateNotEmpty.validate(model.otpCode),
+            SignUpContract.SignUpState.Field.DEPARTMENT to validateDepartmentSelected.validate(model.department),
+            SignUpContract.SignUpState.Field.PASSWORD to validatePasswordLength.validate(model.password),
+            SignUpContract.SignUpState.Field.CONFIRM_PASSWORD to validatePasswordsMatch.validate(model.password, model.confirmPassword),
+            SignUpContract.SignUpState.Field.POLICY to validateTermsAccepted.validate(model.isPolicyAccepted)
+        ).forEach { (field, result) ->
+            if (result is ValidationResult.Error) errors[field] = result.message
+        }
+
+        if (errors.isNotEmpty()) {
+            setState { copy(errors = errors) }
+            errors.values.firstOrNull()?.let { sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(it)) }
+            return
+        }
+
+        // All validations passed → Verify OTP first
+        setState { copy(isLoading = true) }
+
+        handleResponse(
+            apiCall = { verifyOtpUseCase.execute(model.phoneNumber, model.otpCode) },
+            onSuccess = { responseText ->
+                // responseText is a String from your repo
+                if (responseText.contains("successfully", ignoreCase = true)) {
+                    // OTP verified → proceed to signup
+                    handleResponse(
+                        apiCall = { signUpUseCase.invoke(model.toDomain()) },
+                        onSuccess = {
+                            sendSideEffect(SignUpContract.SignUpSideEffect.NavigateToSignIn)
+                            setState { copy(isLoading = false) }
+                        },
+                        onError = {
+                            sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(it))
+                            setState { copy(isLoading = false) }
+                        },
+                        onLoading = { setState { copy(isLoading = true) } }
+                    )
+                } else {
+                    sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage("OTP verification failed"))
+                    setState { copy(isLoading = false) }
+                }
+            },
+            onError = {
+                sendSideEffect(SignUpContract.SignUpSideEffect.ShowMessage(it))
+                setState { copy(isLoading = false) }
+            },
+            onLoading = { setState { copy(isLoading = true) } }
+        )
+
+    }
 }

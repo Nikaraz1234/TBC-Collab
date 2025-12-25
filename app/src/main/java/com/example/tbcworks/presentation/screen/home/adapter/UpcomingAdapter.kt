@@ -43,20 +43,24 @@ class UpcomingAdapter(
 
         fun bind(event: EventModel) = with(binding) {
 
-            tvMonth.text = event.date.monthShort()
-            tvDay.text = event.date.day()
+            tvMonth.text = event.date?.monthShort() ?: "--"
+            tvDay.text = event.date?.day() ?: "--"
 
-            tvTitle.text = event.title
-            tvDescription.text = event.description
-            tvLocation.text = event.location.venueName
+            tvTitle.text = event.title ?: "No title"
+            tvDescription.text = event.description ?: ""
+            tvLocation.text = event.location?.venueName ?: "No location"
 
-            tvTime.text = event.date.toTimeRange()
+            tvTime.text = event.date?.toTimeRange() ?: "--:--"
 
-            val spotsLeft = event.capacity.maxCapacity - event.capacity.currentlyRegistered
-            binding.tvRegistered.text = if (spotsLeft > 0) {
-                "${event.capacity.currentlyRegistered} registered • $spotsLeft spots left"
+            val minParticipants = event.capacity?.minParticipants ?: 0
+            val maxCapacity = event.capacity?.maxCapacity ?: 0
+            val spotsLeft = maxCapacity - minParticipants
+
+            tvRegistered.text = if (maxCapacity > 0) {
+                if (spotsLeft > 0) "$minParticipants registered • $spotsLeft spots left"
+                else "$minParticipants registered • Full"
             } else {
-                "${event.capacity.currentlyRegistered} registered • Full"
+                "Capacity not available"
             }
 
             tvViewDetails.setOnClickListener {

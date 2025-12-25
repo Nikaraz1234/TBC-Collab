@@ -47,4 +47,10 @@
     <string name="search_events">Search events...</string>
     <string name="team_building">Team Building</string>
     <string name="welcome_subtitle">Stay connected with upcoming company events and activities.</string>
+    <string name="earlier">EARLIER</string>
+    <string name="NEW">NEW</string>
+    <string name="code_expires_in_1_minute">Code Expires in 1 minute</string>
+    <string name="my_events">My Events</string>
+    <string name="no_registered_events">No Registered Events.</string>
+    <string name="no_new_notifications">No new notifications.</string>
 </resources>

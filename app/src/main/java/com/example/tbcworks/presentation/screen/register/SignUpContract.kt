@@ -20,6 +20,7 @@ object SignUpContract {
     sealed class SignUpEvent {
         data class Submit(val model: SignUpModel) : SignUpEvent()
         object SignInClicked : SignUpEvent()
+        data class SendOtpClicked(val phoneNumber: String) : SignUpEvent()
     }
 
 }

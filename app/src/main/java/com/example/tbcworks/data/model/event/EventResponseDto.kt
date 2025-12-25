@@ -4,17 +4,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EventResponseDto(
-    val id: String,
+    val eventId: Int? = null,
     val title: String,
-    val organizer: OrganizerDto,
-    val category: String,
-    val description: String,
-    val agenda: List<AgendaItemDto>,
-    val imgUrl: String,
-    val userStatus: String, // not Register/Waitlist/Approved
+    val organizer: OrganizerDto? = null,
+    val category: EventCategory? = null,
+    val description: String? = null,
+    val agenda: List<AgendaItemDto> = emptyList(),
+    val imgUrl: String? = null,
+    val userStatus: String,
     val registrationStatus: String,
-    val speakers: List<SpeakerDto>,
-    val date: DateDto,
-    val location: LocationDto,
-    val capacity: CapacityDto
+    val speakers: List<SpeakerDto> = emptyList(),
+    val date: DateDto? = null,
+    val location: LocationDto? = null,
+    val capacity: CapacityDto? = null
 )

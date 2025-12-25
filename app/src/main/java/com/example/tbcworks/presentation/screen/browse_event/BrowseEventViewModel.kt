@@ -1,9 +1,10 @@
 package com.example.tbcworks.presentation.screen.browse_event
 
-import com.example.tbcworks.domain.usecase.GetEventsUseCase
+import com.example.tbcworks.domain.Resource
+import com.example.tbcworks.domain.model.event.EventFilter
+import com.example.tbcworks.domain.usecase.event.GetEventsUseCase
 import com.example.tbcworks.presentation.common.BaseViewModel
 import com.example.tbcworks.presentation.mapper.toPresentation
-import com.example.tbcworks.presentation.model.EventModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -14,8 +15,8 @@ class BrowseEventViewModel @Inject constructor(
     BrowseEventContract.State()
 ) {
 
-    private var allEvents: List<EventModel> = emptyList()
     private var selectedCategory: String? = null
+    private var activeFilter: EventFilter? = null
 
     init {
         loadCategories()
@@ -24,6 +25,7 @@ class BrowseEventViewModel @Inject constructor(
 
     private fun loadCategories() {
         val categories = listOf(
+            "All",
             "TeamBuilding",
             "Sports",
             "Workshops",
@@ -36,21 +38,22 @@ class BrowseEventViewModel @Inject constructor(
 
     private fun loadEvents() {
         handleResponse(
-            apiCall = { getEventsUseCase() },
+            apiCall = { getEventsUseCase(activeFilter) },
+            onLoading = { setState { copy(isLoading = true) } },
             onSuccess = { events ->
-                allEvents = events.map { it.toPresentation() }
+                val mapped = events.map { it.toPresentation() }
                 setState {
                     copy(
-                        events = allEvents,
-                        filteredEvents = allEvents,
+                        events = mapped,
+                        filteredEvents = mapped,
                         isLoading = false
                     )
                 }
             },
             onError = { message ->
-                sendSideEffect(BrowseEventContract.SideEffect.ShowError(message))
-            },
-            onLoading = { setState { copy(isLoading = true) } }
+                sendSideEffect(BrowseEventContract.SideEffect.ShowError(message ?: "Unknown error"))
+                setState { copy(isLoading = false) }
+            }
         )
     }
 
@@ -58,23 +61,36 @@ class BrowseEventViewModel @Inject constructor(
         when (event) {
             is BrowseEventContract.Event.SearchQueryChanged -> {
                 setState { copy(searchQuery = event.query) }
-                applyFilters()
+                applySearchFilter() // filter locally for search only
             }
             is BrowseEventContract.Event.CategorySelected -> {
                 selectedCategory = event.category
-                setState { copy(selectedCategory = event.category) }
-                applyFilters()
+                applySearchFilter() // apply search + category locally if needed
+            }
+            is BrowseEventContract.Event.FiltersApplied -> {
+                activeFilter = event.filter
+                loadEvents() // fetch filtered events from use case
             }
         }
     }
 
-    private fun applyFilters() {
+    private fun applySearchFilter() {
         val query = uiState.value.searchQuery.lowercase()
-        val filtered = allEvents.filter { event ->
-            val matchesCategory = selectedCategory?.let { it == event.category } ?: true
-            val matchesQuery = event.title.lowercase().contains(query)
-            matchesCategory && matchesQuery
+
+        val filtered = uiState.value.events.filter { event ->
+
+            val matchesQuery =
+                query.isBlank() ||
+                        event.title?.lowercase()?.contains(query) == true
+
+            val matchesCategory =
+                selectedCategory.isNullOrBlank() || selectedCategory.equals("All", ignoreCase = true) ||
+                        selectedCategory.equals(event.category?.name.toString(), ignoreCase = true)
+
+            matchesQuery && matchesCategory
         }
+
         setState { copy(filteredEvents = filtered) }
     }
+
 }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tbcworks.R
 import com.example.tbcworks.databinding.ItemEventCategoryBinding
 import com.example.tbcworks.presentation.common.GenericDiffCallback
 import com.example.tbcworks.presentation.screen.home.model.CategoryModel
@@ -39,13 +40,33 @@ class CategoryAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CategoryModel) = with(binding) {
-            //ivLogo.setImageResource(item.iconRes)
+            ivLogo.setImageResource(
+                getCategoryIcon(item.category)
+            )
+
             tvCategory.text = item.category
             tvCount.text = "${item.eventCount} Events"
 
             root.setOnClickListener {
                 onClick(item.category)
             }
+        }
+    }
+
+    private fun getCategoryIcon(category: String?): Int {
+        return when (
+            category
+                ?.lowercase()
+                ?.replace(" ", "")
+                ?.replace("_", "")
+        ) {
+            "teambuilding" -> R.drawable.ic_group
+            "sports" -> R.drawable.ic_sports
+            "workshops" -> R.drawable.ic_workshop
+            "happyfridays" -> R.drawable.ic_friday
+            "cultural" -> R.drawable.ic_cultural
+            "wellness" -> R.drawable.ic_wellness
+            else -> R.drawable.ic_group
         }
     }
 }

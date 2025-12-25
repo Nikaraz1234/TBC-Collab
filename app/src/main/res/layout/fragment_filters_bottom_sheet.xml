@@ -1,36 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Filter Events"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
-
-    <CheckBox
-        android:id="@+id/cbOnline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Online Events" />
-
-    <CheckBox
-        android:id="@+id/cbOffline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Offline Events" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnApplyFilters"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:background="@drawable/shape_btn"
-        android:textColor="@color/white"
-        android:layout_height="wrap_content"
-        android:text="Apply"
-        android:layout_marginTop="16dp"/>
-</LinearLayout>
+        android:layout_height="wrap_content">
+
+        <!-- Title -->
+        <TextView
+            android:text="Filter Events"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Location Type -->
+        <TextView
+            android:layout_marginTop="12dp"
+            android:text="Location Type"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:id="@+id/cbOnline"
+            android:text="Online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:id="@+id/cbOffline"
+            android:text="Offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Capacity -->
+        <TextView
+            android:layout_marginTop="12dp"
+            android:text="Capacity"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:id="@+id/cbAvailable"
+            android:text="Available"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <CheckBox
+            android:id="@+id/cbFull"
+            android:text="Full"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Apply -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnApplyFilters"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Apply"
+            android:background="@drawable/shape_btn"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+</ScrollView>

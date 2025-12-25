@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.tbcworks.R
 import com.example.tbcworks.databinding.ItemSpeakerBinding
 import com.example.tbcworks.presentation.common.GenericDiffCallback
 import com.example.tbcworks.presentation.model.SpeakerModel
@@ -40,7 +41,9 @@ class SpeakerAdapter :
             tvName.text = item.fullName
             tvRole.text = item.role
 
-            ivProfilePicture.load(item.imgUrl)
+            ivProfilePicture.load(R.drawable.ic_profile_pic)
+
+
         }
     }
 }

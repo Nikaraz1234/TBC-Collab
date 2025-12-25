@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CapacityDto(
     val maxCapacity: Int,
-    val currentlyRegistered: Int,
-    val enableWaitlist: Boolean,
-    val waitlistCapacity: Int,
-    val autoApprove: Boolean
+    val minParticipants: Int? = null,
+    val enableWaitlist: Boolean? = null,
+    val waitlistCapacity: Int? = null,
+    val autoApprove: Boolean? = null
 )

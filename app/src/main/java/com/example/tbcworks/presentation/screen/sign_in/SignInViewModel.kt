@@ -1,6 +1,10 @@
 package com.example.tbcworks.presentation.screen.sign_in
 
+import androidx.lifecycle.viewModelScope
+import com.example.tbcworks.data.local.datastore.AuthTokenHolder
 import com.example.tbcworks.domain.usecase.auth.SignInUseCase
+import com.example.tbcworks.domain.usecase.datastore.PreferencesKeys
+import com.example.tbcworks.domain.usecase.datastore.SetPreferenceUseCase
 import com.example.tbcworks.domain.usecase.validation.ValidateEmailFormatUseCase
 import com.example.tbcworks.domain.usecase.validation.ValidateNotEmptyUseCase
 import com.example.tbcworks.domain.usecase.validation.ValidatePasswordLengthUseCase
@@ -10,13 +14,15 @@ import com.example.tbcworks.presentation.common.BaseViewModel
 import com.example.tbcworks.domain.validation.*
 import com.example.tbcworks.presentation.screen.sign_in.mapper.toDomain
 import com.example.tbcworks.presentation.screen.sign_in.model.SignInModel
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val validateNotEmpty: ValidateNotEmptyUseCase,
     private val validateEmail: ValidateEmailFormatUseCase,
     private val validatePasswordLength: ValidatePasswordLengthUseCase,
-    private val signInUseCase: SignInUseCase
+    private val signInUseCase: SignInUseCase,
+    private val setPreferenceUseCase: SetPreferenceUseCase
 ) : BaseViewModel<
         SignInContract.State,
         SignInContract.SideEffect,
@@ -72,8 +78,14 @@ class SignInViewModel @Inject constructor(
             apiCall = { signInUseCase(SignInModel(state.email, state.password).toDomain()) },
             onSuccess = { token ->
                 setState { copy(isLoading = false) }
+
+                // ✅ Save token via SetPreferenceUseCase
+                AuthTokenHolder.token = token.token
+
+
+
+                // ✅ Navigate to Home/Main page
                 sendSideEffect(SignInContract.SideEffect.NavigateToHome)
-                // Optional: save token if needed
             },
             onError = { message ->
                 setState { copy(isLoading = false) }
@@ -84,6 +96,7 @@ class SignInViewModel @Inject constructor(
             }
         )
     }
+
 
 
 }

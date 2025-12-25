@@ -1,7 +1,5 @@
 package com.example.tbcworks.presentation.screen.event_detail
 
-import com.example.tbcworks.domain.model.event.AgendaItem
-import com.example.tbcworks.domain.model.event.Speaker
 import com.example.tbcworks.presentation.model.AgendaModel
 import com.example.tbcworks.presentation.model.SpeakerModel
 
@@ -10,12 +8,15 @@ object EventDetailsContract {
     data class State(
         val isLoading: Boolean = false,
 
+        val eventId: String? = null,
+
         val title: String = "",
         val bannerUrl: String = "",
         val eventDate: String = "",
         val eventTime: String = "",
         val location: String = "",
         val capacity: String = "",
+        val isUserRegistered: Boolean = false,
 
         val isRegistrationOpen: Boolean = false,
         val registerCloseText: String = "",

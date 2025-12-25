@@ -26,17 +26,24 @@ class EventAdapter(
 
         fun bind(event: EventModel) {
 
-            binding.tvMonth.text = event.date.monthShort()
-            binding.tvDay.text = event.date.day()
+            // Date info
+            binding.tvMonth.text = event.date?.monthShort() ?: "-"
+            binding.tvDay.text = event.date?.day() ?: "-"
 
             // Event info
-            binding.tvCategory.text = event.category
-            binding.tvStatus.text = event.registrationStatus.name
-            binding.tvTitle.text = event.title
-            binding.tvTime.text = event.date.toTimeRange()
-            binding.tvLocation.text = event.location.venueName
-            binding.tvRegistered.text = "${event.capacity.currentlyRegistered} registered"
-            binding.tvSpotsLeft.text = "${event.capacity.maxCapacity - event.capacity.currentlyRegistered} spots left"
+            binding.tvCategory.text = event.category?.name ?: "-"
+            binding.tvStatus.text = event.registrationStatus ?: "-"
+            binding.tvTitle.text = event.title ?: "-"
+            binding.tvTime.text = event.date?.toTimeRange() ?: "-"
+            binding.tvLocation.text = event.location?.venueName ?: "-"
+
+            // Capacity info
+            val minParticipants = event.capacity?.minParticipants ?: 0
+            val maxCapacity = event.capacity?.maxCapacity ?: 0
+            val spotsLeft = (maxCapacity - minParticipants).coerceAtLeast(0)
+
+            binding.tvRegistered.text = "$minParticipants registered"
+            binding.tvSpotsLeft.text = "$spotsLeft spots left"
 
             // Click listener
             binding.root.setOnClickListener {

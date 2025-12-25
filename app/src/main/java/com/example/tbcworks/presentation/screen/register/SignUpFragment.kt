@@ -49,17 +49,22 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(
             when (effect) {
                 is SignUpContract.SignUpSideEffect.ShowMessage -> binding.root.showSnackBar(effect.message)
                 is SignUpContract.SignUpSideEffect.NavigateToHome -> {
-                    // navigate to home fragment/activity
+
                 }
                 is SignUpContract.SignUpSideEffect.NavigateToSignIn -> {
                     findNavController().popBackStack()
                 }
             }
         }
+        collectStateFlow(viewModel.uiState) { state ->
+            binding.progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+            binding.btnCreateAccount.isClickable = !state.isLoading
+            binding.btnSentOTP.isClickable = !state.isLoading
+        }
     }
 
     private fun setUpDropDown(){
-        val departments = listOf("HR", "Finance", "IT", "Marketing", "Operations")
+        val departments = listOf("HR", "It", "Marketing", "Sales", "Finance", "Operations","Other")
         val adapter = ArrayAdapter(requireContext(), R.layout.simple_list_item_1, departments)
         binding.departmentDropdown.setAdapter(adapter)
 
@@ -72,6 +77,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(
         binding.rvOtpCode.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = digitAdapter
+            itemAnimator = null
             isNestedScrollingEnabled = false
         }
 
@@ -96,6 +102,15 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(
                 isPolicyAccepted = checkboxPolicy.isChecked
             )
             viewModel.onEvent(SignUpContract.SignUpEvent.Submit(model))
+        }
+        btnSentOTP.setOnClickListener {
+            val phoneNumber = etPhoneNumber.text.toString()
+            viewModel.onEvent(SignUpContract.SignUpEvent.SendOtpClicked(phoneNumber))
+        }
+
+        tvBtnResendCode.setOnClickListener {
+            val phoneNumber = etPhoneNumber.text.toString()
+            viewModel.onEvent(SignUpContract.SignUpEvent.SendOtpClicked(phoneNumber))
         }
 
         tvBtnSignIn.setOnClickListener {

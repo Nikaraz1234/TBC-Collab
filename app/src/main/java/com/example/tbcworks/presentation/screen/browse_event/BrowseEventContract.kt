@@ -1,5 +1,6 @@
 package com.example.tbcworks.presentation.screen.browse_event
 
+import com.example.tbcworks.domain.model.event.EventFilter
 import com.example.tbcworks.presentation.model.EventModel
 import com.example.tbcworks.presentation.screen.home.model.CategoryModel
 
@@ -22,5 +23,6 @@ object BrowseEventContract {
     sealed interface Event {
         data class SearchQueryChanged(val query: String) : Event
         data class CategorySelected(val category: String) : Event
+        data class FiltersApplied(val filter: EventFilter) : Event // passes filter to use case
     }
 }

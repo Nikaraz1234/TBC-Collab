@@ -46,7 +46,7 @@ class TrendingAdapter(
 
             tvEventTitle.text = event.title
 
-            tvEventDate.text = event.date.toDisplayDate()
+            tvEventDate.text = event.date?.toDisplayDate()
 
             ivEventImage.load(event.imgUrl) {
                 placeholder(R.drawable.shape_btn)

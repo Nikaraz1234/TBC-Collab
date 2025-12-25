@@ -14,7 +14,9 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import com.example.tbcworks.BuildConfig
+import com.example.tbcworks.data.local.datastore.AuthInterceptor
 import com.example.tbcworks.data.service.EventService
+import com.example.tbcworks.data.service.NotificationService
 import com.example.tbcworks.data.service.SignInService
 import com.example.tbcworks.data.service.SignUpService
 
@@ -45,7 +47,7 @@ object ApiModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        authInterceptor: Interceptor,
+        authInterceptor: AuthInterceptor,
         loggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
@@ -99,6 +101,13 @@ object ApiModule {
         retrofit: Retrofit
     ): SignInService {
         return retrofit.create(SignInService::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideNotificationService(
+        retrofit: Retrofit
+    ): NotificationService {
+        return retrofit.create(NotificationService::class.java)
     }
 
 }

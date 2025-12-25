@@ -1,5 +1,9 @@
 package com.example.tbcworks.presentation.screen.home
 
+import android.os.Bundle
+import android.util.Log
+import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import com.example.tbcworks.databinding.FragmentEventHubBinding
 import com.example.tbcworks.presentation.common.BaseFragment
 import androidx.fragment.app.viewModels
@@ -15,6 +19,7 @@ import com.example.tbcworks.presentation.screen.home.adapter.ParentAdapter
 import com.example.tbcworks.presentation.screen.home.adapter.TrendingAdapter
 import com.example.tbcworks.presentation.screen.home.adapter.UpcomingAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.toString
 
 @AndroidEntryPoint
 class EventHubFragment : BaseFragment<FragmentEventHubBinding>(
@@ -25,9 +30,16 @@ class EventHubFragment : BaseFragment<FragmentEventHubBinding>(
     private val categoryAdapter by lazy {
         CategoryAdapter(
             onClick = { category ->
-                viewModel.onEvent(
-                    EventHubContract.Event.CategoryClicked(category)
+                val bundle = Bundle().apply {
+                    putString("selectedCategory", category)
+                }
+                parentFragmentManager.setFragmentResult("categoryRequestKey", bundle)
+
+                // Navigate to BrowseByCategoryFragment
+                findNavController().navigate(
+                    EventHubFragmentDirections.actionEventHubFragmentToBrowseByCategoryFragment()
                 )
+
             }
         )
     }
@@ -35,25 +47,30 @@ class EventHubFragment : BaseFragment<FragmentEventHubBinding>(
     private val upcomingAdapter by lazy {
         UpcomingAdapter(
             onEventClick = { event ->
-                viewModel.onEvent(
-                    EventHubContract.Event.EventClicked(event.id)
-                )
+                // Navigate to EventDetailsFragment with eventId argument
+                val action = EventHubFragmentDirections
+                    .actionEventHubFragmentToEventDetailsFragment(event.id.toString())
+                findNavController().navigate(action)
             }
         )
     }
+
     private val trendingAdapter by lazy {
         TrendingAdapter(
             onEventClick = { event ->
-                viewModel.onEvent(
-                    EventHubContract.Event.EventClicked(event.id)
-                )
+                val action = EventHubFragmentDirections
+                    .actionEventHubFragmentToEventDetailsFragment(event.id.toString())
+                findNavController().navigate(action)
             }
         )
     }
 
     override fun listeners() = with(binding){
         tvViewALl.setOnClickListener {
-            findNavController().navigate(EventHubFragmentDirections.actionEventHubFragmentToBrowseByCategoryFragment())
+            findNavController().navigate(EventHubFragmentDirections.actionEventHubFragmentToBrowseEventFragment2())
+        }
+        btnNotifications.setOnClickListener {
+            findNavController().navigate(EventHubFragmentDirections.actionEventHubFragmentToNotificationFragment())
         }
     }
     private val faqAdapter by lazy {
@@ -88,10 +105,12 @@ class EventHubFragment : BaseFragment<FragmentEventHubBinding>(
 
     private fun observeState() {
         collectStateFlow(viewModel.uiState) { state ->
+            binding.progressBar.isVisible = state.isLoading
             upcomingAdapter.submitList(state.upcomingEvents)
             categoryAdapter.submitList(state.categories)
             trendingAdapter.submitList(state.trendingEvents)
             faqAdapter.submitList(state.faqs)
+
         }
     }
 
@@ -99,9 +118,7 @@ class EventHubFragment : BaseFragment<FragmentEventHubBinding>(
         collectFlow(viewModel.sideEffect) { effect ->
             when (effect) {
                 is EventHubContract.SideEffect.NavigateToEvent -> {
-                    val action = EventHubFragmentDirections
-                        .actionEventHubFragmentToEventDetailsFragment(effect.eventId)
-                    findNavController().navigate(action)
+
                 }
                 is EventHubContract.SideEffect.NavigateToCategory -> {
                     // navigate to category screen

@@ -1,7 +1,6 @@
 package com.example.tbcworks.presentation.screen.browse_event.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,8 @@ class CategoryAdapter(
     )
 ) {
 
-    private var selectedPosition = RecyclerView.NO_POSITION
+    // Default selection is first item (position 0, usually "All")
+    private var selectedPosition = 0
 
     inner class CategoryViewHolder(private val binding: ItemFilterCategoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -40,13 +40,20 @@ class CategoryAdapter(
                         context.getColor(R.color.black)
                 )
             }
-            binding.root.setOnClickListener {
-                val previousPosition = selectedPosition
-                selectedPosition = position
-                notifyItemChanged(previousPosition)
-                notifyItemChanged(selectedPosition)
 
-                onItemClick(position)
+            // Handle click
+            binding.root.setOnClickListener {
+                if (selectedPosition != position) {
+                    val previousPosition = selectedPosition
+                    selectedPosition = position
+
+                    // Refresh old and new selected items
+                    notifyItemChanged(previousPosition)
+                    notifyItemChanged(selectedPosition)
+
+                    // Call the callback with new selection
+                    onItemClick(position)
+                }
             }
         }
     }
@@ -63,4 +70,7 @@ class CategoryAdapter(
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.bind(getItem(position), position)
     }
+
+    /** Optional: expose currently selected position */
+    fun getSelectedPosition(): Int = selectedPosition
 }

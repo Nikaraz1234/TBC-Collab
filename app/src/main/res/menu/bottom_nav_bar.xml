@@ -10,20 +10,15 @@
         android:id="@+id/browseEventFragment2"
         android:icon="@drawable/ic_search"
         android:title="Search" />
-<!--
     <item
-        android:id="@+id/addFragment"
+        android:id="@+id/myEventsFragment"
         android:icon="@drawable/ic_event"
         android:title="My Events" />
 
     <item
-        android:id="@+id/updatesFragment"
+        android:id="@+id/notificationFragment"
         android:icon="@drawable/ic_notifications"
         android:title="Notifications" />
 
-    <item
-        android:id="@+id/profileFragment"
-        android:icon="@drawable/ic_profile"
-        android:title="Profile" />
--->
+
 </menu>

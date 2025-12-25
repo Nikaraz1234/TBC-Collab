@@ -1,7 +1,5 @@
 package com.example.tbcworks.presentation.screen.event_detail
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -12,20 +10,20 @@ import com.example.tbcworks.presentation.extension.collectFlow
 import com.example.tbcworks.presentation.extension.collectStateFlow
 import com.example.tbcworks.presentation.extension.loadImage
 import com.example.tbcworks.presentation.extension.showSnackBar
-import com.example.tbcworks.presentation.mapper.toDomain
 import com.example.tbcworks.presentation.screen.event_detail.adapter.AgendaAdapter
 import com.example.tbcworks.presentation.screen.event_detail.adapter.SpeakerAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(
     FragmentEventDetailsBinding::inflate
 ) {
 
     private val viewModel: EventDetailsViewModel by viewModels()
     private val args: EventDetailsFragmentArgs by navArgs()
+
     private val agendaAdapter by lazy { AgendaAdapter() }
-    private val speakerAdapter by lazy {
-        SpeakerAdapter()
-    }
+    private val speakerAdapter by lazy { SpeakerAdapter() }
 
     override fun listeners() {
         binding.btnBack.setOnClickListener {
@@ -41,62 +39,51 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(
         viewModel.onEvent(EventDetailsContract.Event.Load(args.eventId))
         setUpRv()
         observe()
-
     }
 
-    private fun setUpRv(){
+    private fun setUpRv() {
         binding.rvAgenda.apply {
             adapter = agendaAdapter
-            layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(requireContext())
         }
 
         binding.rvSpeakers.apply {
             adapter = speakerAdapter
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(requireContext())
         }
-
     }
-    private fun observe(){
+
+    private fun observe() {
         collectStateFlow(viewModel.uiState) { state ->
             binding.apply {
-                if (state.isLoading) {
-                    // binding.progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
-                }
-
                 tvEventTitle.text = state.title
                 ivBanner.loadImage(state.bannerUrl)
                 tvEventDate.text = state.eventDate
                 tvEventTime.text = state.eventTime
                 tvLocation.text = state.location
                 tvCapacity.text = state.capacity
+                tvRegisterClose.text = state.registerCloseText
                 tvAboutDescription.text = state.aboutDescription
 
-                binding.rvAgenda.adapter?.let { adapter ->
-                    if (adapter is AgendaAdapter) {
-                        adapter.submitList(state.agenda)
+                btnRegister.apply {
+                    isClickable = state.isRegistrationOpen || state.isUserRegistered
+                    text = when {
+                        state.isUserRegistered -> "Cancel Registration"
+                        state.isRegistrationOpen -> "Register"
+                        else -> "Registration Closed"
                     }
                 }
 
-                binding.rvSpeakers.adapter?.let { adapter ->
-                    if (adapter is SpeakerAdapter) {
-                        adapter.submitList(state.speakers)
-                    }
-                }
+                (rvAgenda.adapter as? AgendaAdapter)?.submitList(state.agenda)
+                (rvSpeakers.adapter as? SpeakerAdapter)?.submitList(state.speakers)
             }
         }
 
         collectFlow(viewModel.sideEffect) { effect ->
             when (effect) {
-                is EventDetailsContract.Effect.NavigateBack -> {
-                    findNavController().popBackStack()
-                }
-                is EventDetailsContract.Effect.ShowMessage -> {
-                    binding.root.showSnackBar(effect.message)
-                }
-                is EventDetailsContract.Effect.ShowError -> {
-                    binding.root.showSnackBar(effect.message)
-                }
+                is EventDetailsContract.Effect.NavigateBack -> findNavController().popBackStack()
+                is EventDetailsContract.Effect.ShowMessage -> binding.root.showSnackBar(effect.message)
+                is EventDetailsContract.Effect.ShowError -> binding.root.showSnackBar(effect.message)
             }
         }
     }

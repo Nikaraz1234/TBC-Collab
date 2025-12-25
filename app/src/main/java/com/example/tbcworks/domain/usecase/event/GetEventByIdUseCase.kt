@@ -1,4 +1,4 @@
-package com.example.tbcworks.domain.usecase
+package com.example.tbcworks.domain.usecase.event
 
 import com.example.tbcworks.domain.Resource
 import com.example.tbcworks.domain.model.event.Event
