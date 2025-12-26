@@ -49,8 +49,8 @@ class TrendingAdapter(
             tvEventDate.text = event.date?.toDisplayDate()
 
             ivEventImage.load(event.imgUrl) {
-                placeholder(R.drawable.shape_btn)
-                error(R.drawable.shape_btn)
+                placeholder(R.drawable.image_placeholder)
+                error(R.drawable.image_placeholder)
                 crossfade(true)
             }
 

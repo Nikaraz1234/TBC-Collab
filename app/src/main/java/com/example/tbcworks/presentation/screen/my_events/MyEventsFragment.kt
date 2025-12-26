@@ -2,6 +2,7 @@ package com.example.tbcworks.presentation.screen.my_events
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -47,6 +48,8 @@ class MyEventsFragment : BaseFragment<FragmentMyEventsBinding>(
 
     private fun observeState() {
         collectStateFlow(viewModel.uiState) { state ->
+
+            binding.progressBar.isVisible = state.isLoading
 
             eventsAdapter.submitList(state.events)
 

@@ -10,8 +10,8 @@ import com.google.android.material.snackbar.Snackbar
 
 fun ImageView.loadImage(
     url: String?,
-    placeholderRes: Int = R.drawable.shape_btn,
-    errorRes: Int = R.drawable.shape_btn,
+    placeholderRes: Int = R.drawable.image_placeholder,
+    errorRes: Int = R.drawable.image_placeholder,
     enableCrossfade: Boolean = true,
 ) {
     this.load(url) {

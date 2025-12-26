@@ -19,11 +19,33 @@
             android:layout_height="150dp"
             android:scaleType="centerCrop"
             android:background="@drawable/shape_btn"
+            android:clipToOutline="true"
+            android:outlineProvider="background"
             android:contentDescription="Event Image"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Event Title -->
+        <TextView
+            android:id="@+id/eventTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Annual Team Building Summit"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/eventImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/spotsLeft"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:scrollHorizontally="false"
+            android:gravity="start|center_vertical"/>
+
+        <!-- Spots Left -->
         <TextView
             android:id="@+id/spotsLeft"
             android:layout_width="wrap_content"
@@ -37,21 +59,8 @@
             android:text="8 spots left"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/eventImage"
-            android:layout_margin="8dp"/>
-
-        <!-- Event Title -->
-        <TextView
-            android:id="@+id/eventTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Annual Team Building Summit"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/eventImage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp"/>
+            app:layout_constraintTop_toTopOf="@id/eventTitle"
+            android:layout_marginEnd="8dp"/>
 
         <!-- Event Description -->
         <TextView

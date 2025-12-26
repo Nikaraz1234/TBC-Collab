@@ -13,7 +13,7 @@
         android:src="@drawable/ic_btn_back"
         android:id="@+id/btnBack"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="#FAFAFA"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:padding="8dp"/>
@@ -29,7 +29,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+        android:indeterminate="true"/>
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

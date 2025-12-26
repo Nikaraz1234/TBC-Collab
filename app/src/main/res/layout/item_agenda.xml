@@ -48,8 +48,8 @@
         android:text="Welcome and Introduction"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@id/timeText"
-        app:layout_constraintTop_toTopOf="@id/timeText"
+        app:layout_constraintTop_toBottomOf="@id/timeText"
+        app:layout_constraintStart_toEndOf="@id/numberCircle"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="4dp"/>
 

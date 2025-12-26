@@ -1,6 +1,7 @@
 package com.example.tbcworks.presentation.screen.notification
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tbcworks.databinding.FragmentNotificationBinding
@@ -63,6 +64,8 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(
 
     private fun observeState() {
         collectStateFlow(viewModel.uiState) { state ->
+
+            binding.progressBar.isVisible = state.isLoading
 
             // Remove duplicates if needed
             val uniqueNotifications = state.notifications.distinctBy { it.id }

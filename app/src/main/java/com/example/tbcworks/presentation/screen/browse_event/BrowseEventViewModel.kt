@@ -28,8 +28,8 @@ class BrowseEventViewModel @Inject constructor(
             "All",
             "TeamBuilding",
             "Sports",
-            "Workshops",
-            "HappyFridays",
+            "Workshop",
+            "HappyFriday",
             "Cultural",
             "Wellness"
         )

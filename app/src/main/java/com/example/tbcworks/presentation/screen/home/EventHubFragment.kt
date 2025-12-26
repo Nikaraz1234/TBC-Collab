@@ -11,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tbcworks.R
+import com.example.tbcworks.presentation.MainActivity
 import com.example.tbcworks.presentation.extension.collectFlow
 import com.example.tbcworks.presentation.extension.collectStateFlow
 import com.example.tbcworks.presentation.screen.home.adapter.CategoryAdapter
@@ -67,10 +69,12 @@ class EventHubFragment : BaseFragment<FragmentEventHubBinding>(
 
     override fun listeners() = with(binding){
         tvViewALl.setOnClickListener {
-            findNavController().navigate(EventHubFragmentDirections.actionEventHubFragmentToBrowseEventFragment2())
+            // Navigate to BrowseEventFragment2 properly using MainActivity helper
+            (requireActivity() as MainActivity).navigateToBottomNavFragment(R.id.browseEventFragment2)
         }
         btnNotifications.setOnClickListener {
-            findNavController().navigate(EventHubFragmentDirections.actionEventHubFragmentToNotificationFragment())
+            // Navigate to NotificationFragment properly using MainActivity helper
+            (requireActivity() as MainActivity).navigateToBottomNavFragment(R.id.notificationFragment)
         }
     }
     private val faqAdapter by lazy {
@@ -110,6 +114,11 @@ class EventHubFragment : BaseFragment<FragmentEventHubBinding>(
             categoryAdapter.submitList(state.categories)
             trendingAdapter.submitList(state.trendingEvents)
             faqAdapter.submitList(state.faqs)
+
+            binding.tvWelcome.text = state.user?.let {
+                "Welcome Back, ${it.firstName} ${it.lastName}"
+            } ?: ""
+
 
         }
     }

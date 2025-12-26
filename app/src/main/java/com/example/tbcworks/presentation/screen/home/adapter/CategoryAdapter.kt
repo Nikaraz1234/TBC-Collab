@@ -62,8 +62,8 @@ class CategoryAdapter(
         ) {
             "teambuilding" -> R.drawable.ic_group
             "sports" -> R.drawable.ic_sports
-            "workshops" -> R.drawable.ic_workshop
-            "happyfridays" -> R.drawable.ic_friday
+            "workshop" -> R.drawable.ic_workshop
+            "happyfriday" -> R.drawable.ic_friday
             "cultural" -> R.drawable.ic_cultural
             "wellness" -> R.drawable.ic_wellness
             else -> R.drawable.ic_group

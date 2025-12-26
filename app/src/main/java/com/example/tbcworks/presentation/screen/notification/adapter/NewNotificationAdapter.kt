@@ -1,6 +1,7 @@
 package com.example.tbcworks.presentation.screen.notification.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,13 @@ class NewNotificationAdapter(
 ) : ListAdapter<NotificationModel, NewNotificationAdapter.NotificationViewHolder>(
     GenericDiffCallback(
         areItemsTheSameCheck = { old, new -> old.id == new.id },
-        areContentsTheSameCheck = { old, new -> old == new }
+        areContentsTheSameCheck = { old, new ->
+            old.id == new.id &&
+                    old.title == new.title &&
+                    old.message == new.message &&
+                    old.isRead == new.isRead &&
+                    old.type == new.type
+        }
     )
 ) {
 
@@ -37,23 +44,20 @@ class NewNotificationAdapter(
 
         fun bind(item: NotificationModel) {
             binding.tvTitle.text = item.title
-            binding.tvTime.text = item.toRelativeTime() // use your mapper function
+            binding.tvTime.text = item.toRelativeTime()
 
-            // Optionally, show display date for longer format
-            // binding.tvTime.text = item.toDisplayDate()
-
-            // Set icon based on type
             binding.ivIcon.setImageResource(
                 when (item.type) {
                     com.example.tbcworks.data.model.notification.NotificationType.RegisterConfirmation -> R.drawable.ic_calendar
                     com.example.tbcworks.data.model.notification.NotificationType.DailyReminder -> R.drawable.ic_notifications
                     com.example.tbcworks.data.model.notification.NotificationType.HourReminder -> R.drawable.ic_clock
-                    com.example.tbcworks.data.model.notification.NotificationType.WaitlistUpdates -> R.drawable.ic_required2
+                    com.example.tbcworks.data.model.notification.NotificationType.WaitlistUpdate -> R.drawable.ic_profile
                     com.example.tbcworks.data.model.notification.NotificationType.EventUpdated -> R.drawable.ic_workshop
                 }
             )
 
             binding.root.setOnClickListener {
+                binding.ivIsNew.visibility = View.GONE
                 onItemClick(item)
             }
         }

@@ -7,17 +7,19 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavOptions
+import androidx.navigation.ui.setupWithNavController
 import com.example.tbcworks.R
 import com.example.tbcworks.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.activity.enableEdgeToEdge
-import androidx.navigation.NavDestination
-import androidx.navigation.ui.setupWithNavController
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         // Get NavController
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
 
         // Setup BottomNavigationView with NavController
         binding.bottomNavigationView.setupWithNavController(navController)
@@ -53,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNavigationView.isVisible = destination.id in topLevelDestinations
         }
 
-        // Optional: handle reselection to pop back stack to start destination
+        // Handle reselection to pop back stack to start destination
         binding.bottomNavigationView.setOnItemReselectedListener { item ->
             val currentDestination: NavDestination? = navController.currentDestination
             when (item.itemId) {
@@ -79,5 +81,25 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    /**
+     * Navigate to a BottomNavigationView fragment properly.
+     * This handles both Bottom Nav selection and back stack.
+     */
+    fun navigateToBottomNavFragment(fragmentId: Int) {
+        // Only navigate if not already on the destination
+        if (navController.currentDestination?.id != fragmentId) {
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true) // Avoid multiple copies
+                .setRestoreState(true)
+                .setPopUpTo(navController.graph.startDestinationId, false, true) // Reset back stack
+                .build()
+
+            navController.navigate(fragmentId, null, navOptions)
+        }
+
+        // Update BottomNavigationView selection
+        binding.bottomNavigationView.menu.findItem(fragmentId).isChecked = true
     }
 }

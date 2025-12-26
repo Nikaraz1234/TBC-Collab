@@ -66,7 +66,9 @@ class EventDetailsFragment : BaseFragment<FragmentEventDetailsBinding>(
                 tvAboutDescription.text = state.aboutDescription
 
                 btnRegister.apply {
-                    isClickable = state.isRegistrationOpen || state.isUserRegistered
+                    isClickable = state.isUserRegistered || state.isRegistrationOpen
+                    isEnabled = state.isUserRegistered || state.isRegistrationOpen
+
                     text = when {
                         state.isUserRegistered -> "Cancel Registration"
                         state.isRegistrationOpen -> "Register"

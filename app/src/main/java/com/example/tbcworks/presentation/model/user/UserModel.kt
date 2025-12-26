@@ -1,7 +1,6 @@
-package com.example.tbcworks.domain.model.user
+package com.example.tbcworks.presentation.model.user
 
-
-data class User(
+data class UserModel(
     val firstName: String,
     val lastName: String,
     val role: String,

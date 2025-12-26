@@ -6,13 +6,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.example.tbcworks.presentation.common.BaseViewModel
 import com.example.tbcworks.domain.usecase.event.GetEventsUseCase
+import com.example.tbcworks.domain.usecase.user.GetUserInfoUseCase
 import com.example.tbcworks.presentation.mapper.toPresentation
 import com.example.tbcworks.presentation.screen.home.model.CategoryModel
 import com.example.tbcworks.presentation.screen.home.model.QaItem
 
 @HiltViewModel
 class EventHubViewModel @Inject constructor(
-    private val getEventsUseCase: GetEventsUseCase
+    private val getEventsUseCase: GetEventsUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : BaseViewModel<
         EventHubContract.State,
         EventHubContract.SideEffect,
@@ -45,6 +47,29 @@ class EventHubViewModel @Inject constructor(
         }
 
         loadData()
+        loadUserInfo()
+    }
+
+    private fun loadUserInfo() {
+        handleResponse(
+            apiCall = { getUserInfoUseCase() },
+            onSuccess = { user ->
+                setState {
+                    copy(
+                        user = user.toPresentation()
+                    )
+                }
+
+                Log.d(
+                    "EventHubViewModel",
+                    "User loaded: ${user.firstName} ${user.lastName} (${user.role})"
+                )
+            },
+            onError = {
+                Log.e("EventHubViewModel", "Failed to load user info: $it")
+            },
+            onLoading = {}
+        )
     }
 
     fun onEvent(intent: EventHubContract.Event) {

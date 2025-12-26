@@ -50,7 +50,7 @@ class EventDetailsViewModel @Inject constructor(
                         eventTime = event?.date?.toTimeRange().orEmpty(),
                         location = event?.location?.address?.toUiString().orEmpty(),
                         capacity = event?.capacity?.let { "${it.maxCapacity} Seats" }.orEmpty(),
-                        isUserRegistered = status == "Registered",
+                        isUserRegistered = status == "Approved",
                         isRegistrationOpen = status != "Closed" && status != "Registered",
                         registerCloseText = event?.date?.registerDeadline?.let {
                             "Registration closes on ${it.toFormattedDateTime()}"

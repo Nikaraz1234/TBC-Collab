@@ -19,6 +19,7 @@ import com.example.tbcworks.data.service.EventService
 import com.example.tbcworks.data.service.NotificationService
 import com.example.tbcworks.data.service.SignInService
 import com.example.tbcworks.data.service.SignUpService
+import com.example.tbcworks.data.service.UserService
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -108,6 +109,13 @@ object ApiModule {
         retrofit: Retrofit
     ): NotificationService {
         return retrofit.create(NotificationService::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideUserService(
+        retrofit: Retrofit
+    ): UserService {
+        return retrofit.create(UserService::class.java)
     }
 
 }

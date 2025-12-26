@@ -47,7 +47,7 @@ class AgendaAdapter :
             numberCircle.text = (position + 1).toString()
 
             // Time text: "02:00 PM - 45 min"
-            timeText.text = "${item.startTime} - ${item.duration}"
+            timeText.text = "${item.startTime} - ${item.duration} Minutres"
 
 
             // Title
